@@ -1,0 +1,32 @@
+# Dependencies
+node_modules/
+
+# Next.js build output
+.next/
+out/
+
+# Env files
+.env
+.env.*
+!.env.example
+
+# Local config
+.vscode/
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Supabase temp
+supabase/.temp/
+
+# Lock files (keep one if you use it)
+# If you prefer npm, keep package-lock and remove the next line
+# pnpm-lock.yaml
+# yarn.lock
