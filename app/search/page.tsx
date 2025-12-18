@@ -14,6 +14,7 @@ type Result = {
   token: string | null;
   url: string | null;
   score?: number | null;
+  pfp_url?: string | null;
 };
 
 const PAGE_SIZE = 20;
@@ -298,7 +299,11 @@ function ResultCard({
         <div className="flex items-start justify-between gap-4">
           <div className="min-w-0 flex-1">
             <div className="flex items-start gap-3">
-              <Avatar label={avatarLabel} seed={result.username || result.token || result.doc_id} />
+              <AvatarOrImage
+                label={avatarLabel}
+                seed={result.username || result.token || result.doc_id}
+                src={result.pfp_url}
+              />
 
               <div className="min-w-0 flex-1">
                 <div className="flex flex-wrap items-center gap-2">
@@ -307,9 +312,15 @@ function ResultCard({
                   </div>
 
                   {result.username && (
-                    <span className="rounded-full border border-slate-900 bg-slate-950/70 px-2 py-0.5 text-xs text-slate-300">
+                    <a
+                      href={`https://warpcast.com/${result.username}`}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="rounded-full border border-slate-900 bg-slate-950/70 px-2 py-0.5 text-xs text-slate-300 hover:bg-slate-900/60 hover:text-slate-100"
+                      title="Open profile"
+                    >
                       @{result.username}
-                    </span>
+                    </a>
                   )}
 
                   {result.token && (
@@ -362,6 +373,17 @@ function ResultCard({
 }
 
 function Avatar({ label, seed }: { label: string; seed: string }) {
+function AvatarOrImage({
+  label,
+  seed,
+  src,
+}: {
+  label: string;
+  seed: string;
+  src?: string | null;
+}) {
+  const [errored, setErrored] = useState(false);
+
   const initials = useMemo(() => {
     const s = (label || "").replace(/^[@$]/, "").trim();
     if (!s) return "??";
@@ -385,6 +407,18 @@ function Avatar({ label, seed }: { label: string; seed: string }) {
     for (let i = 0; i < seed.length; i++) h = (h * 31 + seed.charCodeAt(i)) >>> 0;
     return classes[h % classes.length];
   }, [seed]);
+
+  if (src && !errored) {
+    return (
+      <img
+        src={src}
+        alt={label}
+        referrerPolicy="no-referrer"
+        className="mt-0.5 h-10 w-10 rounded-2xl border border-slate-800 object-cover bg-slate-900"
+        onError={() => setErrored(true)}
+      />
+    );
+  }
 
   return (
     <div
