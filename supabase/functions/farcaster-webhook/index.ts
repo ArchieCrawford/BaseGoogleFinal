@@ -102,6 +102,7 @@ serve(async (req) => {
 
   const fid = cast.author?.fid ?? cast.fid ?? null;
   const username = cast.author?.username ?? cast.username ?? null;
+  const pfpUrl = cast.author?.pfp?.url ?? null;
   const text = cast.text ?? cast.body?.text ?? "";
 
   const { addrs, txs } = extract(text);
@@ -151,8 +152,9 @@ serve(async (req) => {
     username: username?.toLowerCase() ?? null,
     tx_hash: txs[0] ?? null,
     url: null,
+    pfp_url: pfpUrl,
     keywords: ["farcaster", username, ...addrs.slice(0, 5)].filter(Boolean),
-    body: { castHash, fid, username, text, addrs, txs },
+    body: { castHash, fid, username, text, addrs, txs, pfp_url: pfpUrl },
   };
 
   const { error: docErr } = await supabase

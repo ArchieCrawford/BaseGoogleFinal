@@ -285,6 +285,7 @@ function ResultCard({
   const snippet = truncateSnippet(rawSnippet);
   const rel = relativeTime(result.ts);
   const hasUrl = Boolean(result.url);
+  const profileUrl = result.username ? `https://warpcast.com/${result.username}` : null;
 
   const displayTitle =
     result.title?.trim() ||
@@ -299,17 +300,45 @@ function ResultCard({
         <div className="flex items-start justify-between gap-4">
           <div className="min-w-0 flex-1">
             <div className="flex items-start gap-3">
-              <AvatarOrImage
-                label={avatarLabel}
-                seed={result.username || result.token || result.doc_id}
-                src={result.pfp_url}
-              />
+              {profileUrl ? (
+                <a
+                  href={profileUrl}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="shrink-0"
+                  title={`Open @${result.username} on Warpcast`}
+                >
+                  <AvatarOrImage
+                    label={avatarLabel}
+                    seed={result.username || result.token || result.doc_id}
+                    src={result.pfp_url}
+                  />
+                </a>
+              ) : (
+                <AvatarOrImage
+                  label={avatarLabel}
+                  seed={result.username || result.token || result.doc_id}
+                  src={result.pfp_url}
+                />
+              )}
 
               <div className="min-w-0 flex-1">
                 <div className="flex flex-wrap items-center gap-2">
-                  <div className="text-sm font-semibold text-slate-100 truncate">
-                    {displayTitle}
-                  </div>
+                  {profileUrl ? (
+                    <a
+                      href={profileUrl}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="text-sm font-semibold text-slate-100 truncate hover:text-slate-50"
+                      title={`Open @${result.username} on Warpcast`}
+                    >
+                      {displayTitle}
+                    </a>
+                  ) : (
+                    <div className="text-sm font-semibold text-slate-100 truncate">
+                      {displayTitle}
+                    </div>
+                  )}
 
                   {result.username && (
                     <a
